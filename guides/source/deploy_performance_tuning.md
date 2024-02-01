@@ -90,6 +90,12 @@ In a few cases it may not make sense to preload your application. In that case i
 
 Puma preloads your application by default by calling +preload_app!+ in +config/puma.rb+. If you remove this call, your application will not be preloaded.
 
+### Memory Allocators and Configuration
+
+CRuby normally uses your system's default memory allocator. You can switch to another allocator such as [jemalloc](https://github.com/jemalloc/jemalloc) or [tcmalloc](https://github.com/google/tcmalloc). You can also configure your allocator &mdash; e.g. Linux's glibc malloc allows setting MALLOC_ARENA_MAX=1 to significantly reduce memory use.
+
+This guide does not cover nonstandard allocators in significant detail. However, they can be a significant optimization relative to the system's default allocator. Long-running thread-based workers can be prone to memory fragmentation, which will reduce performance after many requests. An allocator like jemalloc can help.
+
 Performance Testing
 -------------------
 
@@ -117,7 +123,15 @@ Latency is the delay from the time the request is sent until its response is suc
 
 ### What You Can Change
 
-You can change the number of processes or threads in your test. You can also change other Puma configuration options such as wait_for_less_busy_worker, though you don't normally need to change them.
+You can change the number of threads in your test to find the best tradeoff between throughput and latency for your application.
+
+You can change the number of processes to trade off performance and expense in many cases. Larger instances will need more processes for best usage. You can vary the size and type of instances from a hosting provider, for instance.
+
+You can also change other Puma configuration options such as wait_for_less_busy_worker, though you don't normally need to change them.
+
+You can test changes to memory configuration, such as using a different allocator. These are often simple better/worse tests to validate that a particular configuration works better in your production environment.
+
+Increasing the number of iterations will usually give a more exact answer, but require longer for testing.
 
 You should test on the same type of host that will run in production. Testing data for a development laptop will only tell you what settings are best for that development laptop.
 
@@ -128,6 +142,8 @@ Your application should process a number of requests after startup that are not 
 Your load testing program will usually support warmup requests. You can also run it more than once and throw away the first set of times.
 
 You have enough warmup requests when increasing the number does not significantly change your result. [The theory behind this can be complicated](https://arxiv.org/abs/1602.00602) but most common situations are straightforward: test several times with different amounts of warmup. See how many warmup iterations are needed before the results stay roughly the same.
+
+Very long warmup can be useful for testing memory fragmentation and other issues that happen only after many requests.
 
 ### Which Requests
 
