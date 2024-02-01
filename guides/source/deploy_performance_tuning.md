@@ -64,6 +64,8 @@ This section contains common sense defaults based on the type and size of your a
 
 These are production recommendations. Your development application will have different needs from a production application, and should use a different configuration.
 
+[Puma's deployment documentation](https://github.com/puma/puma/blob/master/docs/deployment.md) may also be useful.
+
 ### Threads Per Process
 
 Rails uses 3 threads per process by default. A well-optimized I/O-heavy Rails application should specify 5 or 6 threads per process at maximum. Discourse, for example, benefits from about 5 threads per process. Discourse also executes many database queries per request and frequently uses Redis. More self-contained applications with fewer database and API queries benefit from around 3 threads per process.
@@ -79,7 +81,7 @@ To set the number of threads, you can change the call to the +threads+ method in
 
 ### Number of Processes
 
-[Puma's deployment documentation](https://github.com/puma/puma/blob/master/docs/deployment.md) recommends running at least 1.5 processes per available processor core. Automatic methods to determine the number of cores are unreliable. You should specify the number of processes manually.
+When using hybrid threads and processes, you should run 1 process per available processor core. Automatic methods to determine the number of cores are unreliable. You should specify the number of processes manually.
 
 To set the number of worker processes, you can change the call to the +workers+ method in +config/puma.rb+. Or you can set the +WEB_CONCURRENCY+ environment variable, which will do the same.
 
