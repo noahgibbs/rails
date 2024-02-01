@@ -95,9 +95,9 @@ Puma preloads your application by default by calling +preload_app!+ in +config/p
 Performance Testing
 -------------------
 
-Settings from "Choosing Default Settings" are much better than using the initial Rails defaults. But your specific application may have unusual needs or benefit from different configuration options.
+Settings from "Choosing Default Settings" are much better than using the initial Rails defaults. Your specific application may have unusual needs or benefit from different configuration options. Load testing takes effort, but can give you more benefit than default settings. You should implement reasonable defaults first.
 
-The best way to choose your application's settings is to test the performance of your application with a simulated production workload. This load testing can be a lot of work. You should save your application's load testing code so you can re-run the tests with future versions of your application.
+The best way to choose your application's settings is to test the performance of your application with a simulated production workload. You should save your application's load testing code so you can re-run the tests with future versions of your application.
 
 Performance testing is a deep subject. This guide gives only simple guidelines.
 
