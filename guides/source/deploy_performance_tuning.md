@@ -44,7 +44,7 @@ Multiple threads can run in the same process. This avoids multiple copies of sha
 
 [CRuby](https://www.ruby-lang.org/en/) has a [Global Interpreter Lock](https://en.wikipedia.org/wiki/Global_interpreter_lock), often called the GVL or GIL. The GVL prevents multiple threads from running Ruby code at the same time in a single process. Multiple threads can be waiting on network data, database operations or some other non-Ruby work, but only one can actively run Ruby code at a time. This means thread-based concurrency is more efficient for applications that use a lot of I/O such as database operations or network APIs. The more I/O your application uses, the more threads it would benefit from.
 
-With the GVL, using a lot of threads has limited value. A Rails app rarely benefits from more than 6. To have a large number of workers, some other concurrency method should be used.
+With the GVL, using a lot of threads has diminishing returns. A Rails app rarely benefits from more than 6. To have a large number of workers, some other concurrency method should be used.
 
 Threads are less resilient than processes. Certain errors like segmentation faults can destroy the entire process and all threads inside.
 
