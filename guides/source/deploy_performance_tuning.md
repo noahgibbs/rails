@@ -66,7 +66,7 @@ These are production recommendations. Your development application will have dif
 
 ### Threads Per Process
 
-Rails uses 3 threads per process by default. A well-optimized I/O-heavy Rails application should specify 5 or 6 threads per process at maximum. Discourse, for example, benefits from about 5 threads per process. Small applications with less I/O benefit from around 3 threads per process.
+Rails uses 3 threads per process by default. A well-optimized I/O-heavy Rails application should specify 5 or 6 threads per process at maximum. Discourse, for example, benefits from about 5 threads per process. Discourse also executes many database queries per request and frequently uses Redis. More self-contained applications with fewer database and API queries benefit from around 3 threads per process.
 
 From the default Puma configuration:
 
