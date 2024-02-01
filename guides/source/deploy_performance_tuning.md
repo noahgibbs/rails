@@ -70,12 +70,7 @@ These are production recommendations. Your development application will have dif
 
 Rails uses 3 threads per process by default. A well-optimized I/O-heavy Rails application should specify 5 or 6 threads per process at maximum. Discourse, for example, benefits from about 5 threads per process. Discourse also executes many database queries per request and frequently uses Redis. More self-contained applications with fewer database and API queries benefit from around 3 threads per process.
 
-From the default Puma configuration:
-
-> As a rule of thumb, increasing the number of threads will increase how much
-> traffic a given process can handle (throughput), but due to CRuby's
-> Global VM Lock (GVL) it has diminishing returns and will degrade the
-> response time (latency) of the application.
+The default Puma configuration mentions that "as a rule of thumb, increasing the number of threads will increase how much traffic a given process can handle (throughput), but due to CRuby's Global VM Lock (GVL) it has diminishing returns and will degrade the response time (latency) of the application."
 
 To set the number of threads, you can change the call to the +threads+ method in +config/puma.rb+. Or you can set the +RAILS_MAX_THREADS+ environment variable, which will do the same.
 
