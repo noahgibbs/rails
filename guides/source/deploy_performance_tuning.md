@@ -48,8 +48,6 @@ With the GVL, using a lot of threads has diminishing returns. A Rails app rarely
 
 Threads are less resilient than processes. Certain errors like segmentation faults can destroy the entire process and all threads inside.
 
-Thread-based workers have much faster startup time than process-based workers. This isn't an issue for most long-running Rails servers, but can be important in some cases.
-
 ### Hybrid Concurrency
 
 Puma allows forking multiple processes, each of which uses multiple threads. This provides a compromise between process-based and thread-based concurrency. Using multiple threads per process helps memory usage. Multiple processes permit running more Ruby code at the same time since there is one GVL per process.
@@ -86,7 +84,7 @@ To set the number of worker processes, you can change the call to the +workers+ 
 
 ### Preloading
 
-Puma creates new workers from a master process. By loading your application code in the master process, you can avoid doing so after creating the worker. This allows faster startup time.
+Puma creates new workers from a master process. By loading your application code in the master process, you can avoid doing so after creating the worker. This permits sharing more memory across processes.
 
 In a few cases it may not make sense to preload your application. In that case it's possible to turn off application preloading.
 
