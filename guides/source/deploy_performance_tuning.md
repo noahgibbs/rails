@@ -71,22 +71,76 @@ Rails uses 3 threads per process by default. A well-optimized I/O-heavy Rails ap
 
 From the default Puma configuration:
 
-    As a rule of thumb, increasing the number of threads will increase how much
-    traffic a given process can handle (throughput), but due to CRuby's
-    Global VM Lock (GVL) it has diminishing returns and will degrade the
-    response time (latency) of the application.
+> As a rule of thumb, increasing the number of threads will increase how much
+> traffic a given process can handle (throughput), but due to CRuby's
+> Global VM Lock (GVL) it has diminishing returns and will degrade the
+> response time (latency) of the application.
+
+To set the number of threads, you can change the call to the +threads+ method in +config/puma.rb+. Or you can set the +RAILS_MAX_THREADS+ environment variable, which will do the same.
 
 ### Number of Processes
 
 [Puma's deployment documentation](https://github.com/puma/puma/blob/master/docs/deployment.md) recommends running at least 1.5 processes per available processor core. Automatic methods to determine the number of cores are unreliable. You should specify the number of processes manually.
 
+To set the number of worker processes, you can change the call to the +workers+ method in +config/puma.rb+. Or you can set the +WEB_CONCURRENCY+ environment variable, which will do the same.
+
 ### Preloading
 
+Puma creates new workers from a master process. By loading your application code in the master process, you can avoid doing so after creating the worker. This allows faster startup time.
 
+In a few cases it may not make sense to preload your application. In that case it's possible to turn off application preloading.
+
+Puma preloads your application by default by calling +preload_app!+ in +config/puma.rb+. If you remove this call, your application will not be preloaded.
 
 Performance Testing
 -------------------
 
 Settings from "Choosing Default Settings" are much better than using the initial Rails defaults. But your specific application may have unusual needs or benefit from different configuration options.
 
-The best way to choose your application's settings is to test the performance of your application with a simulated production workload.
+The best way to choose your application's settings is to test the performance of your application with a simulated production workload. You should save this load-testing code so you can re-run the tests with future versions of your application.
+
+Performance testing is a deep subject. This guide will only give simple guidelines.
+
+### Load Testers
+
+You will need a load-testing program to make requests of your application. This can be a dedicated load-testing program of some kind, or you can write a small application to make HTTP requests and track how long they take. You should not normally check the time in your Rails logfile. That time is only how long Rails took to process the request. It does not include time taken by the application server.
+
+Sending many simultaneous requests and timing them can be difficult. It is easy to introduce subtle measurement errors. Normally you should use a load-testing program, not write your own. Many load testers are simple to use and many excellent load testers are free.
+
+### What to Measure
+
+Throughput is the number of requests per second that your application successfully processes. Any good load testing program will measure it. Throughput is normally a single number for each load test.
+
+Latency is the delay from the time the request is sent until its response is successfully received. Each individual request will have its own latency.
+
+[Percentile](https://en.wikipedia.org/wiki/Percentile_rank) latency gives the latency where a certain percentage of requests have better latency than that. For instance, P90 is the 90th-percentile latency. The P90 is the latency for a single load test where only 10% of requests look longer than that to process. The P50 is the latency such that half your requests were slower, also called the median latency.
+
+"Tail latency" refers to high-percentile latencies. For instance, the P99 is the latency such that only 1% of your requests was worse. P99 is a tail latency. P50 is not a tail latency.
+
+### What You Can Change
+
+You can change the number of processes or threads in your test. You can also change other Puma configuration options such as wait_for_less_busy_worker, though you don't normally need to change them.
+
+You should test on the same type of host that will run in production. Testing data for a development laptop will only tell you what settings are best for that development laptop.
+
+### Warmup
+
+Your application should process a number of requests after startup that are not included in your final measurements. These applications are called "warmup" requests, and are usually much slower than later "steady-state" requests.
+
+Your load testing program will usually support warmup requests. You can also run it more than once and throw away the first set of times.
+
+You have enough warmup requests when increasing the number does not significantly change your result. [The theory behind this can be complicated](https://arxiv.org/abs/1602.00602) but most common situations are straightforward: test several times with different amounts of warmup. See how many warmup iterations are needed before the results stay roughly the same.
+
+### Which Requests
+
+Your application probably accepts many different HTTP requests. You should begin by load-testing with just a few of them. You can add more kinds of requests over time. If a particular kind of request is too slow in your production application, you can add it to your load-testing code.
+
+A synthetic workload cannot perfectly match your application's production traffic. It is still helpful for testing configurations.
+
+### What to Look For
+
+Your load testing program should allow you to check latencies, including percentile and tail latencies.
+
+For different numbers of processes and threads, or different configurations in general, check the throughput and one or more latencies such as P50, P90 and P99. For very few threads, performance will usually be bad for all of these. Increasing the threads will improve latency up to a point, and then improve throughput but worsen latency after that.
+
+Choose a tradeoff between latency and throughput based on your application's needs.
