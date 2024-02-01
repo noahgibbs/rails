@@ -34,7 +34,7 @@ This guide is for [CRuby](https://ruby-lang.org), the original implementation of
 
 Puma calls its multi-process concurrency "clustered mode". In this mode it forks new worker processes from a master process and each one separately processes requests. Each worker is a fully-capable Ruby process.
 
-Creating new processes uses a lot of memory. Each worker contains all data from the master process. Ruby uses [copy-on-write memory](https://en.wikipedia.org/wiki/Copy-on-write) to avoid duplicating most master-process data that doesn't change. But process-based workers often use a lot of memory, especially long-running workers.
+Each forked worker significantly increase memory usage since each worker contains all data from the parent process. But Ruby leverages [copy-on-write memory](https://en.wikipedia.org/wiki/Copy-on-write) to avoid duplicating most master-process data that doesn't change. But process-based workers often use a lot of memory, especially long-running workers.
 
 Processes are resilient. Killing a single process doesn't affect other processes much. They are also slower to start up than threads. Loading your application in the master thread instead of the workers is called preloading. It helps startup time, but may increase memory use if not all workers would use all parts of the configuration.
 
