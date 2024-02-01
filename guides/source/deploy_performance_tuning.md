@@ -9,6 +9,7 @@ After reading this guide, you will know:
 
 * Whether to use Puma, the default application server
 * How to configure important performance settings for Puma
+* How to begin performance testing your application settings
 
 More information about how to configure your application can be found in the [Configuration Guide](configuring.html).
 
