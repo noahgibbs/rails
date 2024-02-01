@@ -28,7 +28,7 @@ Ruby Concurrency
 
 Ruby has many kinds of concurrency. Puma supports a hybrid process- and thread-based concurrency model.
 
-This guide is for [CRuby](https://ruby-lang.org), the original implementation of Ruby. If you're using a Ruby without a GVL such as JRuby or TruffleRuby, concurrency is very different. If needed, check sources specific to your Ruby implementation.
+This guide assumes you are running [CRuby](https://ruby-lang.org), the canonical implementation of Ruby. If you're using a Ruby implementation without a GVL nor forking support such as JRuby or TruffleRuby, most of this guide doesn't apply. If needed, check sources specific to your Ruby implementation.
 
 ### Process-Based Concurrency
 
