@@ -46,13 +46,13 @@ Multiple threads can run in the same process. This avoids multiple copies of sha
 
 With the GVL, using a lot of threads has diminishing returns. A Rails app rarely benefits from more than 6. To have a large number of workers, some other concurrency method should be used.
 
-Threads are less resilient than processes. Certain errors like segmentation faults can destroy the entire process and all threads inside.
+Threads are less resilient than processes. Certain errors like segmentation faults can destroy the entire process and all threads inside. A single request allocating a lot of memory can stop all threads while the garbage collector runs.
 
 ### Hybrid Concurrency
 
 Puma allows forking multiple processes, each of which uses multiple threads. This provides a compromise between process-based and thread-based concurrency. Using multiple threads per process helps memory usage. Multiple processes permit running more Ruby code at the same time since there is one GVL per process.
 
-Hybrid concurrency limits the damage from a segmentation fault or other error that kills a process. A single process dying will kill that process's threads but not threads in other processes.
+Hybrid concurrency limits the damage from a segmentation fault or other error that kills a process. A single process dying will kill that process's threads but not threads in other processes. Each process has its own independent garbage collector.
 
 Choosing Default Settings
 -------------------------
