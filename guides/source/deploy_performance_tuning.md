@@ -42,7 +42,7 @@ Processes are resilient. Killing a single process doesn't affect other processes
 
 Multiple threads can run in the same process. This avoids multiple copies of shared data. Thread-based workers usually use much less memory than the same number of process-based workers.
 
-[CRuby](https://www.ruby-lang.org/en/) has a [Global Interpreter Lock](https://en.wikipedia.org/wiki/Global_interpreter_lock), often called the GVL or GIL. The GVL prevents multiple threads from running Ruby code at the same time in a single process. A thread can be waiting on network data, database operations or some other non-Ruby work, but only one can actively run Ruby code at a time. This means thread-based concurrency is more efficient for applications that use a lot of I/O such as database operations or network APIs. The more I/O your application uses, the more threads it would benefit from.
+[CRuby](https://www.ruby-lang.org/en/) has a [Global Interpreter Lock](https://en.wikipedia.org/wiki/Global_interpreter_lock), often called the GVL or GIL. The GVL prevents multiple threads from running Ruby code at the same time in a single process. Multiple threads can be waiting on network data, database operations or some other non-Ruby work, but only one can actively run Ruby code at a time. This means thread-based concurrency is more efficient for applications that use a lot of I/O such as database operations or network APIs. The more I/O your application uses, the more threads it would benefit from.
 
 With the GVL, using a lot of threads has limited value. A Rails app rarely benefits from more than 6. To have a large number of workers, some other concurrency method should be used.
 
