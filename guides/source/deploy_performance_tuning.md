@@ -63,7 +63,7 @@ Rails' default settings are chosen for small applications. You can improve perfo
 
 This section contains common sense defaults based on the type and size of your application and the hosts on which it runs. You can improve performance more by testing your application specifically. See "Performance Testing" for details.
 
-If you're using a Ruby implementation without a GVL such as JRuby or TruffleRuby the number of threads and processes will be completely different. These recommendations are only accurate for CRuby. These are also production recommendations. Your development application will have different needs from a production application, and should use a different configuration.
+These are production recommendations. Your development application will have different needs from a production application, and should use a different configuration.
 
 ### Threads Per Process
 
