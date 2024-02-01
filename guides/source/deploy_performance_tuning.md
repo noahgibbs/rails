@@ -17,7 +17,7 @@ More information about how to configure your application can be found in the [Co
 Choosing an Application Server
 ------------------------------
 
-An application server uses a particular concurrency method. For example Unicorn uses processes, Puma is hybrid process- and thread-based concurrency, Thin uses EventMachine and Falcon uses Ruby Fibers.
+An application server uses a particular concurrency method. For example Unicorn uses processes, Puma and Passenger are hybrid process- and thread-based concurrency, Thin uses EventMachine and Falcon uses Ruby Fibers.
 
 A full discussion of Ruby's concurrency methods is beyond the scope of this document. If you want to use a method other than processes or threads, you will need to use a different application server. Some features are only available with a specific server, such as Pitchfork's reforking.
 
